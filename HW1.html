@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="[Your Name Here]" />
+<meta name="author" content="[Lianghui Li]" />
 
 
 <title>HW1</title>
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">HW1</h1>
-<h4 class="author"><em>[Your Name Here]</em></h4>
+<h4 class="author"><em>[Lianghui Li]</em></h4>
 <h4 class="date"><em>Due September 11, 2017</em></h4>
 
 </div>
@@ -129,11 +129,88 @@ $(document).ready(function () {
 <div id="exploratory-data-analysis" class="section level2">
 <h2>Exploratory Data Analysis</h2>
 <ol style="list-style-type: decimal">
-<li><p>Create a summary of the data. How many variables have missing data?</p></li>
-<li><p>Which of the predictors are quantitative, and which are qualitative?</p></li>
-<li><p>What is the range of each quantitative predictor? You can answer this using the <code>range()</code> function. Create a table with variable name, min, max with one row per variable. <code>kable</code> from the package <code>knitr</code> can display tables nicely.</p></li>
-<li><p>What is the mean and standard deviation of each quantitative predictor? <em>Format nicely in a table as above</em></p></li>
-<li><p>Now remove the 10th through 85th observations (try this with <code>filter</code> from the <code>dplyr</code> package). What is the range, mean, and standard deviation of each predictor in the subset of the data that remains? <em>Again, present the output as a nicely formated table</em></p></li>
+<li>Create a summary of the data. How many variables have missing data?</li>
+</ol>
+<pre class="r"><code>summary(Auto)</code></pre>
+<pre><code>##       mpg          cylinders      displacement     horsepower   
+##  Min.   : 9.00   Min.   :3.000   Min.   : 68.0   Min.   : 46.0  
+##  1st Qu.:17.00   1st Qu.:4.000   1st Qu.:105.0   1st Qu.: 75.0  
+##  Median :22.75   Median :4.000   Median :151.0   Median : 93.5  
+##  Mean   :23.45   Mean   :5.472   Mean   :194.4   Mean   :104.5  
+##  3rd Qu.:29.00   3rd Qu.:8.000   3rd Qu.:275.8   3rd Qu.:126.0  
+##  Max.   :46.60   Max.   :8.000   Max.   :455.0   Max.   :230.0  
+##                                                                 
+##      weight      acceleration        year           origin     
+##  Min.   :1613   Min.   : 8.00   Min.   :70.00   Min.   :1.000  
+##  1st Qu.:2225   1st Qu.:13.78   1st Qu.:73.00   1st Qu.:1.000  
+##  Median :2804   Median :15.50   Median :76.00   Median :1.000  
+##  Mean   :2978   Mean   :15.54   Mean   :75.98   Mean   :1.577  
+##  3rd Qu.:3615   3rd Qu.:17.02   3rd Qu.:79.00   3rd Qu.:2.000  
+##  Max.   :5140   Max.   :24.80   Max.   :82.00   Max.   :3.000  
+##                                                                
+##                  name    
+##  amc matador       :  5  
+##  ford pinto        :  5  
+##  toyota corolla    :  5  
+##  amc gremlin       :  4  
+##  amc hornet        :  4  
+##  chevrolet chevette:  4  
+##  (Other)           :365</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Which of the predictors are quantitative, and which are qualitative?</li>
+</ol>
+<pre class="r"><code>#mpg, cylinders, displacement, horsepower, weight and accelaertion are quantaitative.
+
+#year, orgin and name are qualitative.</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>What is the range of each quantitative predictor? You can answer this using the <code>range()</code> function. Create a table with variable name, min, max with one row per variable. <code>kable</code> from the package <code>knitr</code> can display tables nicely.</li>
+</ol>
+<pre class="r"><code>maxmin.df &lt;- data.frame(t(apply(Auto[1:6], 2, range)))
+colnames(maxmin.df) &lt;- c('min', 'max')
+maxmin.df</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["min"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"9","2":"46.6"},{"1":"3","2":"8.0"},{"1":"68","2":"455.0"},{"1":"46","2":"230.0"},{"1":"1613","2":"5140.0"},{"1":"8","2":"24.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>#kable?how to use</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>What is the mean and standard deviation of each quantitative predictor? <em>Format nicely in a table as above</em></li>
+</ol>
+<pre class="r"><code>mean.df &lt;- data.frame(apply(Auto[1:6], 2, mean))
+sd.df &lt;- data.frame(apply(Auto[1:6], 2, sd))
+quan.df &lt;- cbind(mean.df, sd.df)
+colnames(quan.df) &lt;- c('mean', 'sd')
+
+print(quan.df)</code></pre>
+<pre><code>##                     mean         sd
+## mpg            23.445918   7.805007
+## cylinders       5.471939   1.705783
+## displacement  194.411990 104.644004
+## horsepower    104.469388  38.491160
+## weight       2977.584184 849.402560
+## acceleration   15.541327   2.758864</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Now remove the 10th through 85th observations (try this with <code>filter</code> from the <code>dplyr</code> package). What is the range, mean, and standard deviation of each predictor in the subset of the data that remains? <em>Again, present the output as a nicely formated table</em></li>
+</ol>
+<pre class="r"><code>Auto$num &lt;- as.numeric(seq(1, nrow(Auto)))
+auto_rm &lt;- filter(Auto, num &lt;= 0.1 * nrow(Auto) | num &gt;= 0.85 * nrow(Auto))
+maxminrm.df &lt;- data.frame(t(apply(auto_rm[1:6], 2, range)))
+meanrm.df &lt;- data.frame(apply(auto_rm[1:6], 2, mean))
+sdrm.df &lt;- data.frame(apply(auto_rm[1:6], 2, sd))
+quanrm.df &lt;- cbind(maxminrm.df, meanrm.df, sdrm.df)
+
+colnames(quanrm.df) &lt;- c('min', 'max', 'mean', 'sd')
+
+print(quanrm.df)</code></pre>
+<pre><code>##               min    max        mean         sd
+## mpg             9   44.0   25.995918   8.311561
+## cylinders       4    8.0    5.244898   1.637582
+## displacement   79  455.0  185.969388 107.199347
+## horsepower     46  225.0  103.857143  44.391882
+## weight       1755 4732.0 2808.755102 749.960522
+## acceleration    8   24.6   15.177551   3.017356</code></pre>
+<ol start="6" style="list-style-type: decimal">
 <li><p>Investigate the predictors graphically, using scatterplot matrices (<code>ggpairs</code>) and other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings. <em>Try adding a caption to your figure</em></p></li>
 <li><p>Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables using regression. Do your plots suggest that any of the other variables might be useful in predicting mpg using linear regression? Justify your answer.</p></li>
 </ol>
@@ -165,8 +242,7 @@ $(document).ready(function () {
 </ol></li>
 </ol>
 <ol start="2" style="list-style-type: lower-alpha">
-<li>Show that the prediction error can never be smaller than <span class="math display">\[E[(Y - \hat{f}(x))^2 \mid X = x] \ge 
- \underbrace{\textsf{Var}(\epsilon)}_{Irreducible}
+<li>Show that the prediction error can never be smaller than <span class="math display">\[E[(Y - \hat{f}(x))^2 \mid X = x] \ge \textsf{Var}(\epsilon)
 \]</span></li>
 </ol>
 <p>e.g. even if we can learn <span class="math inline">\(f(x)\)</span> perfectly that the error in prediction will not vanish.</p>

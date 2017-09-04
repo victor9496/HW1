@@ -1,6 +1,6 @@
 ---
 title: "HW1"
-author: '[Your Name Here]'
+author: '[Lianghui Li]'
 date: "Due  September 11, 2017"
 output:
   html_document:
@@ -9,9 +9,11 @@ output:
   pdf_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message = F}
 knitr::opts_chunk$set(echo = TRUE)
 library(ISLR)
+library(knitr)
+library(dplyr)
 # add other libraries here
 ```
 
@@ -25,25 +27,36 @@ data(Auto)
 1. Create a summary of the data.  How many variables have missing data?
 
 ```{r}
-
+summary(Auto)
 ```
 
 
 2.  Which of the predictors are quantitative, and which are qualitative?
 ```{r}
+#mpg, cylinders, displacement, horsepower, weight and accelaertion are quantaitative.
 
+#year, orgin and name are qualitative.
 ```
 
 3. What is the range of each quantitative predictor? You can answer this using the `range()` function.   Create a table with variable name, min, max with one row per variable.   `kable` from the package `knitr` can display tables nicely.
 
 ```{r}
+maxmin.df <- data.frame(t(apply(Auto[1:6], 2, range)))
+colnames(maxmin.df) <- c('min', 'max')
+maxmin.df
 
+#kable?how to use
 ```
 
 4. What is the mean and standard deviation of each quantitative predictor?  _Format nicely in a table as above_
 
 ```{r}
+mean.df <- data.frame(apply(Auto[1:6], 2, mean))
+sd.df <- data.frame(apply(Auto[1:6], 2, sd))
+quan.df <- cbind(mean.df, sd.df)
+colnames(quan.df) <- c('mean', 'sd')
 
+print(quan.df)
 ```
 
 5. Now remove the 10th through 85th observations (try this with `filter` from the `dplyr` package). What is the
@@ -51,6 +64,16 @@ range, mean, and standard deviation of each predictor in the
 subset of the data that remains?  _Again, present the output as a nicely formated table_
 
 ```{r}
+Auto$num <- as.numeric(seq(1, nrow(Auto)))
+auto_rm <- filter(Auto, num <= 0.1 * nrow(Auto) | num >= 0.85 * nrow(Auto))
+maxminrm.df <- data.frame(t(apply(auto_rm[1:6], 2, range)))
+meanrm.df <- data.frame(apply(auto_rm[1:6], 2, mean))
+sdrm.df <- data.frame(apply(auto_rm[1:6], 2, sd))
+quanrm.df <- cbind(maxminrm.df, meanrm.df, sdrm.df)
+
+colnames(quanrm.df) <- c('min', 'max', 'mean', 'sd')
+
+print(quanrm.df)
 
 ```
 
